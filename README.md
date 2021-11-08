@@ -1,31 +1,67 @@
-# [proposal-string-trim-characters](https://github.com/Kingwl/proposal-string-trim-characters)
+# [proposal-geojson maps for guest locational behavior]
 
-Proposal to add argument for `.trim()`, `.trimStart()` and `.trimEnd()` to allow strip the specified characters from strings.
+Proposal to add Plotly (or other) maps to AIR for locational visibility on campaigns, redemptions, offer density and more.
 
 ## Status
 
-This proposal is a [stage-0 proposal](https://github.com/tc39/proposals/blob/master/stage-0-proposals.md) and waiting for feedback.
+This proposal is a [stage-0 proposal] and waiting for feedback.
 
 ## Motivation
 
-We often remove some leading/trailing whitespaces from the beginning or end (or both) of a string by `trim`, `trimStart`, and `trimEnd`.
+Customers often ask if our campaigns create bottlenecks in their understaffed stores. More generally, a geospatial view of which stores SS Campaigns affect could be useful in understanding the distribution of our guest selection and redemption behavior.
 
-We can only remove the [WhiteSpace](https://262.ecma-international.org/11.0/#prod-WhiteSpace) and [LineTerminator](https://262.ecma-international.org/11.0/#prod-LineTerminator). If you want to remove some other strings who not defined by whitespace. There's no semantical and convenience way to do that.
+If our customers would like to have the flexibility to select regions to launch campaigns in, this visual can help them with that. Eventually, the idea is to augment Smart Segments with a geospatial configuration. 
 
-### Semantical & Convenience
-The major point of the proposal is **semantical** and **convenience**.
+### Initial Views
+What initial views/aggregations would be most useful to customers?
 
-For now. How could we remove some specific leading/trailing characters?
+-State/county level store locations with their guest density
+-Zip level store locations with their guest density
+-DMA level store locations with their guest density (potential future state)
 
-- regex
+-State/county level store locations with their guest spend
+-Zip level store locations with their guest spend
+-DMA level store locations with their guest spend (potential future state)
+
+-State/county level campaign targeting/redemptions
+-Zip level campaign targeting/redemptions
+-DMA level campaign targeting/redemptions (potential future state)
+
+-If data is available, we can also layer store capacity.
+
+- plotly example
 
 ```ts
-const str = "-_-abc-_-";
-const characters = "-_";
+from urllib.request import urlopen
+import json
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
 
-const regex = new RegExp(`(^[${characters}]*)|([${characters}]*$)`, 'g')
+import plotly.express as px
 
-console.log(str.replaceAll(regex, '')) // abc
+df_fip_pd=(df_fip
+           .groupby([ 'COUNTY']).agg(f.round(f.sum('item_subtotal'),1).alias('total_spend'))
+           .toPandas()
+          )
+
+fig = px.choropleth(df_fip_pd, geojson=counties, locations='COUNTY', color='total_spend',
+                           color_continuous_scale=px.colors.diverging.BrBG,
+                          # range_color=(0, 50),
+                              scope="usa",
+                           labels={'total_spend':'$'},
+#                     facet_col='category_1', facet_col_wrap=3,
+#                     facet_col_spacing=0.01,
+                   basemap_visible=True
+                    
+                    
+                          )
+fig.update_geos(fitbounds="locations", visible=True)
+fig.update_yaxes(matches=None)
+fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+fig.update_yaxes(showticklabels=True) # assuming second facet
+
+
+fig.show()
 ```
 
 - manually
