@@ -64,23 +64,10 @@ fig.update_yaxes(showticklabels=True) # assuming second facet
 fig.show()
 ```
 
-- manually
+- visual
 
-```ts
-const str = "-_-abc-_-";
-const characters = "-_";
+![image](https://user-images.githubusercontent.com/37112850/140806448-0d75a4bc-8182-4f76-8505-cc35c981500c.png)
 
-let start = 0;
-while (characters.indexOf(str[start]) >= 0) {
-    start += 1;
-}
-let end = str.length - 1;
-while (characters.indexOf(str[end]) >= 0) {
-    end -= 1;
-}
-
-console.log(str.substr(start, end - start + 1)) // abc
-```
 
 As you can see. For these both solutions, there's no idea about what does it doing when you see it, You have to pay attention on it to understand it. 
 
