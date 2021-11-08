@@ -1,4 +1,4 @@
-# [proposal-geojson maps for guest locational behavior]
+# Proposal-geojson maps for guest locational behavior
 
 Proposal to add Plotly (or other) maps to AIR for locational visibility on campaigns, redemptions, offer density and more.
 
@@ -68,61 +68,7 @@ fig.show()
 
 ![image](https://user-images.githubusercontent.com/37112850/140806448-0d75a4bc-8182-4f76-8505-cc35c981500c.png)
 
+![non_seco_spend_by_region](https://user-images.githubusercontent.com/37112850/140809205-7f519d52-5e6d-4c53-b3e0-4877b4d5cb77.png)
 
-As you can see. For these both solutions, there's no idea about what does it doing when you see it, You have to pay attention on it to understand it. 
 
-### Performance
-
-And for the regex version, there's might also performance issue as [TypeScript's implementations](https://github.com/microsoft/TypeScript/blob/main/src/compiler/core.ts#L2330-L2344): [jsbench](https://jsbench.me/gjkoxld4au/1).
-
-### Consolation
-
-That's why we need this proposal. It's will add some **semantic** and **convenience** way to `clearly representing the operation i want`. And as a possible bonus, it also reduces the amount of very poorly performing code we write.
-
-## Core API
-
-Add an optional argument `characters` into `String.prototype.trim` ,  `String.prototype.trimStart`and   `String.prototype.trimEnd`. 
-
-This argument will allow us which characters will be remove from the start or end (or both) from the string.
-
-The definition of API will looks like:
-
-```ts
-interface String {
-    trim(characters?: string): string;
-    trimStart(characters?: string): string;
-    trimEnd(characters?: string): string;
-}
-
-```
-
-With this proposal, we could use as:
-
-```typescript
-const str = "-_-abc-_-";
-const characters = "-_";
-
-console.log(str.trim(characters)) // abc
-console.log(str.trimStart(characters)) // abc-_-
-console.log(str.trimEnd(characters)) // -_-abc
-```
-
-## Prior art
-
-- Lodash - [lodash.trim](https://lodash.com/docs/4.17.15#trim), [lodash.trimStart](https://lodash.com/docs/4.17.15#trimStart), [lodash.trimEnd](https://lodash.com/docs/4.17.15#trimEnd)
-- PHP - [function.trim](https://www.php.net/manual/en/function.trim.php), [function.ltrim](https://www.php.net/manual/en/function.ltrim.php), [function.rtrim](https://www.php.net/manual/en/function.rtrim.php)
-- Python - [str.strip](https://docs.python.org/3/library/stdtypes.html#str.strip), [str.lstrip](https://docs.python.org/3/library/stdtypes.html#str.lstrip), [str.rstrip](https://docs.python.org/3/library/stdtypes.html#str.rstrip)
-- C# - [String.Trim](https://docs.microsoft.com/en-us/dotnet/api/system.string.trim?view=net-5.0), [String.TrimStart](https://docs.microsoft.com/en-us/dotnet/api/system.string.trimstart?view=net-5.0), [String.TrimEnd](https://docs.microsoft.com/en-us/dotnet/api/system.string.trimend?view=net-5.0)
-- Go - [Trim](https://golang.org/pkg/strings/#Trim), [TrimLeft](https://golang.org/pkg/strings/#TrimLeft), [TrimRight](https://golang.org/pkg/strings/#TrimRight), [TrimPrefix](https://golang.org/pkg/strings/#TrimPrefix), [TrimSuffix](https://golang.org/pkg/strings/#TrimSuffix)
-
-## Previous discuss
-- https://github.com/tc39/proposal-string-left-right-trim/issues/22 
-- https://esdiscuss.org/topic/string-trim-chars 
-- https://esdiscuss.org/topic/string-prototype-trimstart-string-prototype-trimend-with-a-given-string
-
-## Proposer
-
-Champions:
-
-- @Kingwl (Wenlu Wang, KWL)
 
